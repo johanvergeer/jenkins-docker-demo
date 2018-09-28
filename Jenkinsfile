@@ -6,7 +6,7 @@ pipeline {
         pollSCM('*/5 * * * *')
     }
     stages {
-        stage('Compile') {
+        stage('Build') {
             steps {
                 sh './gradlew clean build'
             }
@@ -14,6 +14,11 @@ pipeline {
         stage('Unit Test') {
             steps {
                 sh './gradlew test'
+            }
+            post {
+                always {
+                    junit '**/test-results/test/**.xml'
+                }
             }
         }
     }
