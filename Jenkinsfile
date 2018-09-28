@@ -1,19 +1,8 @@
-throttle(['throttleDocker']){
-    node('docker') {
-        stage('Setup'){
-            checkout scm
-        }
-        stage('Compile') {
+pipeline {
+    stages {
+        stage('demo') {
             steps {
-                gradle {
-                    tasks('clean')
-                    tasks('build')
-                }
-            }
-        }
-        stage('Unit Tests') {
-            gradle{
-                tasks('test')
+                echo "qwerty"
             }
         }
     }
