@@ -2,10 +2,13 @@ pipeline {
     agent {
         label 'docker'
     }
+    triggers {
+        pollSCM('*/5 * * * *')
+    }
     stages {
-        stage('demo') {
+        stage('Compile') {
             steps {
-                echo "qwerty"
+                gradlew('clean', 'build')
             }
         }
     }
