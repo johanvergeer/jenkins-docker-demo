@@ -4,10 +4,15 @@ throttle(['throttleDocker']){
             checkout scm
         }
         stage('Compile') {
-            gradle('clean', 'build')
+            gradle {
+                tasks('clean')
+                tasks('build')
+            }
         }
         stage('Unit Tests') {
-            gradle('test')
+            gradle{
+                tasks('test')
+            }
         }
     }
 }
