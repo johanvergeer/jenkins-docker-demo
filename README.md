@@ -36,7 +36,7 @@ I'll use [DigitalOcean](https://m.do.co/c/bb3d4e750ffb) for hosting. As a softwa
 ## Setup Jenkins Master
 First step is to install a Jenkins Master. We'll use Docker to run Jenkins on the server.
 
-<script src="https://gist.github.com/johanvergeer/eea63deccae6536a77b609b9493c31a5.js"?file=install-docker.sh></script>
+<script src="https://gist.github.com/johanvergeer/eea63deccae6536a77b609b9493c31a5.js?file=install-docker.sh"></script>
 {% gist eea63deccae6536a77b609b9493c31a5 install-docker.sh %}
 {% gist eea63deccae6536a77b609b9493c31a5 switch-to-docker-group.sh %}
 
