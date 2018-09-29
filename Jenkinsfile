@@ -22,7 +22,7 @@ pipeline {
                 sh './gradlew sonarqube'
             }
         }
-        stage('Deploy') {
+        stage('DeployToStaging') {
             steps {
                 sh ‘ssh johan@188.166.10.76 rm -rf /var/www/staging/dist/’
                 sh 'ssh johan@188.166.10.76 mkdir -p /var/www/staging'
