@@ -157,7 +157,9 @@ INFO: Connected
 
 And in the Jenkins UI you should see something like this in the botton left corner
 
-![Jenkins agent showing](docs/img/jenkins-agent-showing.png?s=50){:height="100px" width="100px"}
+<img src="/johanvergeer/jenkins-docker-demo/raw/master/docs/img/jenkins-agent-showing.png" alt="Jenkins agent showing" width="100px">
+
+![Jenkins agent showing](docs/img/jenkins-agent-showing.png?s=50)
 
 
 #### Create a service to start `swarm.sh`
