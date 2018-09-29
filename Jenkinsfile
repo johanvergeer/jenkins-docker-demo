@@ -32,7 +32,7 @@ pipeline {
                                 sshTransfer(
                                     cleanRemote: false,
                                     excludes: '',
-                                    execCommand: 'java -jar',
+                                    execCommand: 'echo foo',
                                     execTimeout: 120000,
                                     flatten: false,
                                     makeEmptyDirs: false,
@@ -41,7 +41,7 @@ pipeline {
                                     remoteDirectory: '',
                                     remoteDirectorySDF: false,
                                     removePrefix: '',
-                                    sourceFiles: 'build/libs/**/*.jar')
+                                    sourceFiles: '**/*.jar')
                             ],
                             usePromotionTimestamp: false,
                             useWorkspaceInPromotion: false,
