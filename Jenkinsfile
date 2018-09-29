@@ -22,6 +22,35 @@ pipeline {
                 sh './gradlew sonarqube'
             }
         }
+        stage('Deploy to staging'){
+            steps {
+                sshPublisher(
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: 'Staging',
+                            transfers: [
+                                sshTransfer(
+                                    cleanRemote: false,
+                                    excludes: '',
+                                    execCommand: 'java -jar',
+                                    execTimeout: 120000,
+                                    flatten: false,
+                                    makeEmptyDirs: false,
+                                    noDefaultExcludes: false,
+                                    patternSeparator: '[, ]+',
+                                    remoteDirectory: '',
+                                    remoteDirectorySDF: false,
+                                    removePrefix: '',
+                                    sourceFiles: 'build/libs/**/*.jar')
+                            ],
+                            usePromotionTimestamp: false,
+                            useWorkspaceInPromotion: false,
+                            verbose: false
+                        )
+                    ]
+                )
+            }
+        }
         stage('Postman test') {
             steps {
                 sh 'newman run https://www.getpostman.com/collections/a6a6b1153b86166326ca --global-var url="http://188.166.10.76:8090" --timeout-request 30000'
