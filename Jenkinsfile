@@ -32,7 +32,7 @@ pipeline {
                                 sshTransfer(
                                     cleanRemote: false,
                                     excludes: '',
-                                    execCommand: 'java -jar /var/www/staging/build/libs/jenkins-docker-demo-0.0.1-SNAPSHOT.jar -Drun.jvmArguments='-Dserver.port=8090'',
+                                    execCommand: 'java -jar /var/www/staging/build/libs/jenkins-docker-demo-0.0.1-SNAPSHOT.jar -Drun.jvmArguments="-Dserver.port=8090"',
                                     execTimeout: 120000,
                                     flatten: false,
                                     makeEmptyDirs: false,
