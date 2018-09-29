@@ -159,7 +159,7 @@ And in the Jenkins UI you should see something like this in the botton left corn
 
 <img src="/johanvergeer/jenkins-docker-demo/raw/master/docs/img/jenkins-agent-showing.png" alt="Jenkins agent showing" width="100px">
 
-![Jenkins agent showing](docs/img/jenkins-agent-showing.png?s=50)
+![Jenkins agent showing](docs/img/jenkins-agent-showing.png)
 
 
 #### Create a service to start `swarm.sh`
