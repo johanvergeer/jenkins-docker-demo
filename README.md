@@ -39,20 +39,20 @@ First step is to install a Jenkins Master. We'll use Docker to run Jenkins on th
 ```bash
 # Install Docker
 curl -sSL https://get.docker.com/ | sh
-
 # Add user to Docker group... 
 sudo usermod -aG docker $(whoami)
+# ...and switch to the new group
+newgrp docker
 ```
 
-
-<script src="https://gist.github.com/johanvergeer/eea63deccae6536a77b609b9493c31a5.js"></script>
-
-{% gist eea63deccae6536a77b609b9493c31a5 install-docker.sh %}
-{% gist eea63deccae6536a77b609b9493c31a5 switch-to-docker-group.sh %}
-
 Run the Jenkins container and tail the logs
-{% gist eea63deccae6536a77b609b9493c31a5 run-jenkins-container.sh %}
-{% gist eea63deccae6536a77b609b9493c31a5 tail-jenkins-logs.sh %}
+
+```bash
+mkdir ~/jenkins
+cd ~/jenkins
+docker run -d --name jenkins -p 8080:8080 -p 50000:50000 -v $(pwd):/var/jenkins_home --restart always jenkins/jenkins:lts
+docker logs -f jenkins
+```
 
 Open the Jenkins web ui at `http://yourhostname:8080` and install the following plugins
 
@@ -68,24 +68,92 @@ After installing confirm the plugins have moved from the "Available" to the "Ins
 ## Setup a Jenkins Agent
 Once we have a Jenkins Master, we can setup a Jenkins agent we'll use to run our builds on. Here we'll also use Docker so let's install it first
 
-{% gist eea63deccae6536a77b609b9493c31a5 install-docker.sh %}
-{% gist eea63deccae6536a77b609b9493c31a5 switch-to-docker-group.sh %}
+```bash
+# Install Docker
+curl -sSL https://get.docker.com/ | sh
+# Add user to Docker group... 
+sudo usermod -aG docker $(whoami)
+# ...and switch to the new group
+newgrp docker
+```
 
 ### Jenkins Swarm module
 The Jenkins Swarm module comes with a cli agent, which connects the Jenkins agent to the Jenkins master. 
 First we'll need Java 8 to let us run the Jenkins swarm cli agent, which is a Java client on the Jenkins agent
-{% gist eea63deccae6536a77b609b9493c31a5 install-java-8.sh %}
+
+```bash
+sudo apt install openjdk-8-jdk
+```
 
 Next download the Jenkins Swarm client
-{% gist eea63deccae6536a77b609b9493c31a5 download-jenkins-swarm-client.sh %}
+```bash
+sudo -s
+mkdir -p /usr/local/jenkins
+cd /usr/local/jenkins
+wget https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/3.7/swarm-client-3.7.jar # Make sure you're using the correct version!
+touch swarm.sh
+chmod +x swarm.sh
+```
 
 Create a shell script that executes the Jenkins Swarm client
-{% gist eea63deccae6536a77b609b9493c31a5 swarm.sh %}
+```bash
+# This should go into /usr/local/jenkins/swarm.sh
+
+#!/bin/bash
+cd $(dirname $0)
+
+JENKINS_IP="10.0.0.1"
+USERNAME="admin"
+PASSWORD="12345678"
+
+# $(hostname) will be the name that appears in Jenkins UI
+# -executors is the number of concurrent tasks that it can handle from Jenkins
+# -labels is the name of the node
+# -master is the ip addess of the Jenkins Master
+java -jar swarm-client-3.7.jar -name "$(hostname)" -executors 8 -labels docker -master "http://$JENKINS_IP:8080" -username "$USERNAME" -password "$PASSWORD" -fsroot /tmp
+```
 
 #### Confirm the Swarm client is working
 
 Now when you run the script we just created you should see something like the following output which confirms we can connect to the Jenkins master
-{% gist eea63deccae6536a77b609b9493c31a5 test-run-swarm.bash %}
+
+```bash
+me@jenkins-agent-1:/usr/local/jenkins$ ./swarm.sh
+Sep 28, 2018 8:22:44 AM hudson.plugins.swarm.Client main
+INFO: Client.main invoked with: [-name jenkins-agent-1 -executors 8 -labels docker -master http://$jenkins_master_ip:8080 -username $username -password $password -fsroot /tmp]
+Sep 28, 2018 8:22:45 AM hudson.plugins.swarm.Client run
+INFO: Discovering Jenkins master
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+Sep 28, 2018 8:22:45 AM hudson.plugins.swarm.Client run
+INFO: Attempting to connect to http://$jenkins_master_ip:8080/ secret with ID anid
+Sep 28, 2018 8:22:46 AM hudson.remoting.jnlp.Main createEngine
+INFO: Setting up agent: jenkins-agent-1-5cbaa68d
+Sep 28, 2018 8:22:46 AM hudson.remoting.jnlp.Main$CuiListener <init>
+INFO: Jenkins agent is running in headless mode.
+Sep 28, 2018 8:22:46 AM hudson.remoting.Engine startEngine
+WARNING: No Working Directory. Using the legacy JAR Cache location: /home/me/.jenkins/cache/jars
+Sep 28, 2018 8:22:46 AM hudson.remoting.jnlp.Main$CuiListener status
+INFO: Locating server among [http://ip_address:8080/]
+Sep 28, 2018 8:22:46 AM org.jenkinsci.remoting.engine.JnlpAgentEndpointResolver resolve
+INFO: Remoting server accepts the following protocols: [JNLP4-connect, Ping]
+Sep 28, 2018 8:22:46 AM hudson.remoting.jnlp.Main$CuiListener status
+INFO: Agent discovery successful
+  Agent address: jenkins_agent_address
+  Agent port:    50000
+  Identity:      secret
+Sep 28, 2018 8:22:46 AM hudson.remoting.jnlp.Main$CuiListener status
+INFO: Handshaking
+Sep 28, 2018 8:22:46 AM hudson.remoting.jnlp.Main$CuiListener status
+INFO: Connecting to 188.166.10.76:50000
+Sep 28, 2018 8:22:46 AM hudson.remoting.jnlp.Main$CuiListener status
+INFO: Trying protocol: JNLP4-connect
+Sep 28, 2018 8:22:47 AM hudson.remoting.jnlp.Main$CuiListener status
+INFO: Remote identity confirmed: secret
+Sep 28, 2018 8:22:48 AM hudson.remoting.jnlp.Main$CuiListener status
+INFO: Connected
+```
 
 And in the Jenkins UI you should see something like this in the botton left corner
 
@@ -95,10 +163,26 @@ And in the Jenkins UI you should see something like this in the botton left corn
 #### Create a service to start `swarm.sh`
 
 Edit the file `/etc/systemd/system/jenkins.service` so that it contains the following:
-{% gist eea63deccae6536a77b609b9493c31a5 jenkins.service %}
+```bash
+[Unit]
+Description=Jenkins
+After=network.target
+
+[Service]
+User=$(whoami) # Replace this with a valid username
+Restart=always
+Type=simple
+ExecStart=/usr/local/jenkins/swarm.sh
+
+[Install]
+WantedBy=multi-user.target
+```
 
 Start the Jenkins service:
-{% gist eea63deccae6536a77b609b9493c31a5 start-jenkins-service.sh %}
+```bash
+systemctl enable jenkins
+systemctl start jenkins
+```
 
 Now each time the agent starts it will  connect to Jenkins master and is ready to receive build commands. 
 
@@ -117,14 +201,10 @@ In the Jenkins dashboard select *Open Blue Ocean*, which will open the Blue Ocea
 
 In my case there is no Jenkinsfile at the moment, so Blue Ocean will prompt me to create one. 
 
-Download docker-compose and vegeta binaries to `/usr/local`
-{% gist eea63deccae6536a77b609b9493c31a5 download-docker-compose.sh %}
-{% gist eea63deccae6536a77b609b9493c31a5 download-vegeta.sh %}
-
 # Install Sonarqube
 To run our static code analysis we'll use Sonarqube. We could go the long way and install everything manually, or we can choose the short way and use Docker. I prefer the short way. 
 From Docker Hub:
 
-{% highlight bash %}
+```bash
 $ docker run -d --name sonarqube -p 9000:9000 -p 9092:9092 sonarqube
-{% endhighlight %}
+```
