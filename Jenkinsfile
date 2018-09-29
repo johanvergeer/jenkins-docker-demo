@@ -6,14 +6,9 @@ pipeline {
         pollSCM('*/5 * * * *')
     }
     stages {
-        stage('Build') {
+        stage('Build & Unit test') {
             steps {
                 sh './gradlew clean build'
-            }
-        }
-        stage('Unit Test') {
-            steps {
-                sh './gradlew test'
             }
             post {
                 always {
