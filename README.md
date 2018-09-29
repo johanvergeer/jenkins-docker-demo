@@ -20,7 +20,7 @@ Since there are a lot of very good tutorials on the web describing the creation 
 ## Generate Spring boot app
 First we'll go to [start.spring.io](https://start.spring.io/) and generate a bootstrap project. Here's my setup:
 
-![File associated with Jekyll(HTML)](docs/img/spring-boot-setup-jenkins-demo.png =250x)
+![File associated with Jekyll(HTML)](docs/img/spring-boot-setup-jenkins-demo.png)
 
 Download the project, unpack the zip file and open the project in your favorite IDE or text editor. I'll use IntelliJ.
  
@@ -78,7 +78,7 @@ Now when you run the script we just created you should see something like the fo
 
 And in the Jenkins UI you should see something like this in the botton left corner
 
-![Jenkins agent showing]({{ "/assets/img/posts/jenkins-agent-showing.png" | relative_url }})
+![Jenkins agent showing](docs/img/jenkins-agent-showing.png)
 
 
 #### Create a service to start `swarm.sh`
@@ -95,7 +95,7 @@ Now each time the agent starts it will  connect to Jenkins master and is ready t
 
 First go to *Manage Jenkins > Configure system > Throttle Concurrent Builds*
 
-![Throttle Docker]({{ "/assets/img/posts/throttle-docker.png" | relative_url }})
+![Throttle Docker](docs/img/throttle-docker.png)
 
 - Notice the *Throttled Name Label* value `docker`. This is the same value we used in *swarm.sh* on the agent for the `-label` argument. 
 - A value to keep in mind for now is *Category Name* with value `throttleDocker`, which we'll use in the **Jenkinsfile** later.
