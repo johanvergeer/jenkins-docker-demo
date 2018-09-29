@@ -12,6 +12,6 @@ class JenkinsDockerDemoApplicationTests {
 
     @Test
     fun simpleTest() {
-        assertEquals("failure - strings are not equal", "string1", "string1")
+        assertEquals("failure - strings are not equal", "string1", "string2")
     }
 }
