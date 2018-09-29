@@ -6,13 +6,14 @@ pipeline {
         pollSCM('*/5 * * * *')
     }
     stages {
-        stage('Build & Unit test') {
+        stage('Unit test & Build') {
             steps {
                 sh './gradlew clean build'
             }
             post {
                 always {
                     junit '**/test-results/test/**.xml'
+                    archiveArtifacts artifacts: 'build/libs/**/*.jar', fingerprint: true
                 }
             }
         }
