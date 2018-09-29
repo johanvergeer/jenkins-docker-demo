@@ -20,7 +20,7 @@ Since there are a lot of very good tutorials on the web describing the creation 
 ## Generate Spring boot app
 First we'll go to [start.spring.io](https://start.spring.io/) and generate a bootstrap project. Here's my setup:
 
-![File associated with Jekyll(HTML)](docs/img/spring-boot-setup-jenkins-demo.png)
+![File associated with Jekyll(HTML)](docs/img/spring-boot-setup-jenkins-demo.png =250x)
 
 Download the project, unpack the zip file and open the project in your favorite IDE or text editor. I'll use IntelliJ.
  
