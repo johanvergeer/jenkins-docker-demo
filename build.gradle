@@ -39,6 +39,18 @@ compileTestKotlin {
 	}
 }
 
+if (gradle.startParameter.taskNames.contains("sonarqube")) {
+    compileKotlin.enabled = false
+    compileKotlin.enabled = false
+    processResources.enabled = false
+    classes.enabled = false
+    compileTestKotlin.enabled = false
+    compileTestJava.enabled = false
+    processTestResources.enabled = false
+    testClasses.enabled = false
+    test.enabled = false
+}
+
 repositories {
 	mavenCentral()
 }
