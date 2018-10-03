@@ -11,6 +11,11 @@ pipeline {
                 sh './gradlew sonarqube'
             }
         }
+        stage("Quality Gate") {
+            steps {
+                waitForQualityGate abortPipeline: true
+            }
+        }
         stage('Unit test & Build') {
             steps {
                 sh './gradlew clean build'
