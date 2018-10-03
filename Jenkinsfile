@@ -6,6 +6,11 @@ pipeline {
         pollSCM('*/1 * * * *')
     }
     stages {
+        stage('SonarQube analysis') {
+            steps {
+                sh './gradlew sonarqube'
+            }
+        }
         stage('Unit test & Build') {
             steps {
                 sh './gradlew clean build'
@@ -15,11 +20,6 @@ pipeline {
                     junit '**/test-results/test/**.xml'
                     archiveArtifacts artifacts: 'build/libs/**/*.jar', fingerprint: true
                 }
-            }
-        }
-        stage('SonarQube analysis') {
-            steps {
-                sh './gradlew sonarqube'
             }
         }
         stage('Deploy to staging'){
@@ -32,7 +32,7 @@ pipeline {
                                 sshTransfer(
                                     cleanRemote: false,
                                     excludes: '',
-                                    execCommand: 'java -jar /var/www/staging/build/libs/jenkins-docker-demo-0.0.1-SNAPSHOT.jar -Drun.jvmArguments="-Dserver.port=8090"',
+                                    execCommand: 'java -jar /var/www/staging/build/libs/jenkins-docker-demo-0.0.1-SNAPSHOT.jar &',
                                     execTimeout: 120000,
                                     flatten: false,
                                     makeEmptyDirs: false,
