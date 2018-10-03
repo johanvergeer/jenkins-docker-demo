@@ -56,6 +56,9 @@ pipeline {
                         )
                     ]
                 )
+                waitUntil {
+                    sh 'wget --retry-connrefused --tries=120 --waitretry=1 -q http://188.166.10.76:8100 -O /dev/null'
+                }
             }
         }
         stage('Postman test') {
