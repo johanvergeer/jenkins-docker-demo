@@ -29,17 +29,17 @@ pipeline {
                 }
             }
         }
-        stage('Deploy to staging'){
+        stage('Deploy to test'){
             steps {
                 sshPublisher(
                     publishers: [
                         sshPublisherDesc(
-                            configName: 'Staging',
+                            configName: 'Test',
                             transfers: [
                                 sshTransfer(
                                     cleanRemote: false,
                                     excludes: '',
-                                    execCommand: 'java -jar /var/www/staging/build/libs/jenkins-docker-demo-0.0.1-SNAPSHOT.jar &',
+                                    execCommand: 'java -jar /var/www/test/build/libs/jenkins-docker-demo-0.0.1-SNAPSHOT.jar &',
                                     execTimeout: 120000,
                                     flatten: false,
                                     makeEmptyDirs: false,
