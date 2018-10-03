@@ -72,7 +72,10 @@ pipeline {
             }
         }
         stage('Approve deploy to acceptance'){
-            input "Deploy to acct?"
+            input {
+                message "Deploy to acct?"
+                ok "Yes"
+            }
             steps {
                 sshPublisher(
                     publishers: [
