@@ -8,7 +8,9 @@ pipeline {
     stages {
         stage('SonarQube analysis') {
             steps {
-                sh './gradlew sonarqube'
+                withSonarQubeEnv('jenkins-docker-demo-webhook') {
+                    sh './gradlew sonarqube'
+                }
             }
         }
         stage("Quality Gate") {
