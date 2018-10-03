@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('SonarQube analysis') {
             steps {
-                withSonarQubeEnv('jenkins-docker-demo-webhook') {
+                withSonarQubeEnv('Sonarqube1') {
                     sh './gradlew sonarqube'
                 }
             }
