@@ -39,7 +39,7 @@ pipeline {
                                 sshTransfer(
                                     cleanRemote: false,
                                     excludes: '',
-                                    execCommand: 'java -jar /var/www/test/build/libs/jenkins-docker-demo-0.0.1-SNAPSHOT.jar &',
+                                    execCommand: '/var/www/test/start.sh',
                                     execTimeout: 120000,
                                     flatten: false,
                                     makeEmptyDirs: false,
