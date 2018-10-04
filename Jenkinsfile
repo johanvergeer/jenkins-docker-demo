@@ -72,6 +72,9 @@ pipeline {
             }
         }
         stage('Approve deploy to acceptance'){
+            slackSend {
+                message "The application is ready to be deployed to acceptance. Please perform tests and click 'Yes' or 'Abort' in the Jenkins pipeline."
+            }
             input {
                 message "Deploy to acct?"
                 ok "Yes"
