@@ -71,10 +71,14 @@ pipeline {
                 sh 'newman run https://www.getpostman.com/collections/a6a6b1153b86166326ca --global-var url="http://188.166.10.76:8100" --timeout-request 30000'
             }
         }
-        stage('Approve deploy to acceptance'){
-            slackSend {
-                message "The application is ready to be deployed to acceptance. Please perform tests and click 'Yes' or 'Abort' in the Jenkins pipeline."
+        stage('Send slack message') {
+            steps {
+                slackSend {
+                    message "The application is ready to be deployed to acceptance. Please perform tests and click 'Yes' or 'Abort' in the Jenkins pipeline."
+                }
             }
+        }
+        stage('Approve deploy to acceptance'){
             input {
                 message "Deploy to acct?"
                 ok "Yes"
