@@ -5,6 +5,9 @@ pipeline {
     triggers {
         pollSCM('*/1 * * * *')
     }
+    options {
+        throttle(categories: ['throttleDocker'])
+    }
     stages {
         stage('SonarQube analysis') {
             steps {
