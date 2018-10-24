@@ -24,6 +24,8 @@ class MainController {
 
     @GetMapping(value = [ "/"])
     fun index(request: HttpServletRequest, model: Model): String {
+        println("Hello, World")
         return "index"
+       
     }
 }
